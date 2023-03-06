@@ -1,5 +1,6 @@
 # 0.4: New note diagram
 
+![Diagram](0.4.png)
 ```
 sequenceDiagram
     participant browser
@@ -42,6 +43,7 @@ note right of browser: The user enters a note to the form input and clicks on th
 
 # 0.5: Single page app diagram
 
+![Diagram](0.5.png)
 ```
 sequenceDiagram
     participant browser
@@ -81,6 +83,7 @@ sequenceDiagram
 ```
 # 0.6: New note in Single page app diagram
 
+![Diagram](0.6.png)
 ```
 sequenceDiagram
     participant browser
