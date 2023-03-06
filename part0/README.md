@@ -1,5 +1,6 @@
 # 0.4 New Note
 
+```
 sequenceDiagram
     participant browser
     participant server
@@ -37,3 +38,4 @@ note right of browser: The user enters a note to the form input and clicks on th
     deactivate server
 
     Note right of browser: The browser executes the callback function that renders the notes
+```
