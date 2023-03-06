@@ -5,8 +5,7 @@ sequenceDiagram
     participant browser
     participant server
     
-note right of browser: The user enters a note to the form input and clicks on the "Save" button.
-
+    Note right of browser: The user enters a note to the form input and clicks on the "Save" button.
 
     browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
     activate server
