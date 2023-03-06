@@ -1,4 +1,4 @@
-# 0.4 New Note
+# 0.4 New note diagram
 
 ```
 sequenceDiagram
