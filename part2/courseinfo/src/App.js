@@ -1,52 +1,74 @@
-const Header = (props) => {
-  return <h1>{props.course}</h1>
+const Header = ({ name }) => {
+  return <h1>{name}</h1>
 }
 
-const Total = (props) => {
-  return <p>Number of exercises {props.sumOfExercises}</p>
+const Content = ({ parts }) => {
+  return (
+    <>
+      {parts.map(parts =>
+        <Part key={parts.id} part={parts} />
+      )}
+    </>
+  )
 }
 
-const Part = (props) => {
+const Part = ({ part }) => {
   return (
     <p>
-      {props.part} {props.exercises}
+      {part.name} {part.exercises}
     </p>
   )
 }
 
-const Content = (props) => {
+const Total = ({ sum }) => {
   return (
-    <div>
-      <Part part={props.part1} exercises1={props.exercises1} />
-      <Part part={props.part2} exercises1={props.exercises2} />
-      <Part part={props.part3} exercises1={props.exercises3} />
-    </div>
+    <p><b>Total of {sum} exercises</b></p>
+  )
+}
+
+const Course = ({ course }) => {
+  const sum = course.parts
+  .map((part) => part.exercises)
+  .reduce((prev, cur) => prev + cur)
+
+  return (
+    <>
+      <Header name={course.name} />
+      <Content parts={course.parts} />
+      <Total sum={sum} />
+    </>
   )
 }
 
 const App = () => {
-  const course = 'Half Stack application development'
-  const part1 = 'Fundamentals of React'
-  const exercises1 = 10
-  const part2 = 'Using props to pass data'
-  const exercises2 = 7
-  const part3 = 'State of a component'
-  const exercises3 = 14
+  const course = {
+    id: 1,
+    name: 'Half Stack application development',
+    parts: [
+      {
+        name: 'Fundamentals of React',
+        exercises: 10,
+        id: 1
+      },
+      {
+        name: 'Using props to pass data',
+        exercises: 7,
+        id: 2
+      },
+      {
+        name: 'State of a component',
+        exercises: 14,
+        id: 3
+      },
+      {
+        name: 'The final frontier',
+        exercises: 57,
+        id: 4
+      }
+    ]
+  }
 
-  return (
-    <div>
-      <Header course={course} />
-      <Content
-        part1={part1}
-        exercises1={exercises1}
-        part2={part2}
-        exercises2={exercises2}
-        part3={part3}
-        exercises3={exercises3}
-      />
-      <Total sumOfExercises={exercises1 + exercises2 + exercises3} />
-    </div>
-  )
+  return <Course course={course} />
 }
 
 export default App
