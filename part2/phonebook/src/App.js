@@ -1,5 +1,49 @@
 import { useState } from 'react'
 
+const Filter = ({ newFilter, setNewFilter }) => {
+
+  return (
+    <>
+      filter shown with <input value={newFilter} onChange={(event) => setNewFilter(event.target.value)} />
+    </>
+  )
+}
+
+const Form = ({ addPerson, newName, setNewName, newNumber, setNewNumber }) => {
+
+  return (
+    <form onSubmit={addPerson}>
+      <div>
+        name: <input value={newName} onChange={(event) => setNewName(event.target.value)} />
+      </div>
+      <div>
+        number: <input type="tel" value={newNumber} onChange={(event) => setNewNumber(event.target.value)} />
+      </div>
+      <div>
+        <button type="submit">add</button>
+      </div>
+    </form>
+  )
+}
+
+const People = ({toShow}) => {
+  return (
+    <>
+      {toShow.map(person =>
+        <Person key={person.name} person={person} />
+      )}
+    </>
+  )
+}
+
+const Person = ({ person }) => {
+  return (
+    <>
+      {person.name} {person.number}<br />
+    </>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456', id: 1 },
@@ -10,6 +54,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
+  
+  const toShow = persons.filter(person => person.name.toLowerCase().includes(newFilter))
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -17,8 +63,7 @@ const App = () => {
       name: newName,
       number: newNumber
     }
-    if(persons.some(({name}) => name === newName))
-    {
+    if (persons.some(({ name }) => name === newName)) {
       alert(`${newName} is already added to phonebook`)
       setNewName('')
       setNewNumber('')
@@ -29,43 +74,15 @@ const App = () => {
     setNewNumber('')
   }
 
-  const Person = ({ person }) => {
-    return (
-      <>
-      {person.name} {person.number}<br />
-      </>
-    )
-  }
-
-const personsToShow = persons.filter(person => person.name.toLowerCase().includes(newFilter))
-
-const handleFilter = (event) => {
-  setNewFilter(event.target.value)
-}
-
   return (
-    <div>
+    <>
       <h2>Phonebook</h2>
-      <div>
-          filter shown with <input value={newFilter} onChange={handleFilter} />
-        </div>
-      <h2>add a new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input value={newName} onChange={(event) => setNewName(event.target.value)} />
-        </div>
-        <div>
-          number: <input type="tel" value={newNumber} onChange={(event) => setNewNumber(event.target.value)} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <Filter newFilter={newFilter} setNewFilter={setNewFilter} />
+      <h2>Add a new</h2>
+      <Form addPerson={addPerson} newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} />
       <h2>Numbers</h2>
-      {personsToShow.map(person =>
-          <Person key={person.id} person={person} />
-        )}
-    </div>
+      <People toShow={toShow} />
+    </>
   )
 }
 
