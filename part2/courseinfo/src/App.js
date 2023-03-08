@@ -62,7 +62,7 @@ const App = () => {
       },
       {
         name: 'The final frontier',
-        exercises: 57,
+        exercises: 58,
         id: 4
       }
     ]
