@@ -27,20 +27,10 @@ const Form = ({ addPerson, newName, setNewName, newNumber, setNewNumber }) => {
   )
 }
 
-const People = ({toShow}) => {
+const Person = ({ person, remove }) => {
   return (
     <>
-      {toShow.map(person =>
-        <Person key={person.name} person={person} />
-      )}
-    </>
-  )
-}
-
-const Person = ({ person }) => {
-  return (
-    <>
-      {person.name} {person.number}<br />
+      {person.name} {person.number} <button onClick={remove}>delete</button><br />
     </>
   )
 }
@@ -50,7 +40,6 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
-  
   const toShow = persons.filter(person => person.name.toLowerCase().includes(newFilter))
 
   useEffect(() => {
@@ -82,6 +71,17 @@ const App = () => {
         setNewNumber('')
       })
   }
+  const removePerson = id => {
+    const person = persons.find(n => n.id === id)
+    const confirmation = window.confirm(`Delete ${person.name}?`)
+    if (confirmation) {
+      personService
+        .removePerson(id)
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id))
+        })
+    }
+  }
 
   return (
     <>
@@ -90,7 +90,12 @@ const App = () => {
       <h2>Add a new</h2>
       <Form addPerson={addPerson} newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} />
       <h2>Numbers</h2>
-      <People toShow={toShow} />
+      {toShow.map(person =>
+        <Person
+          key={person.name}
+          person={person}
+          remove={() => removePerson(person.id)} />
+      )}
     </>
   )
 }
