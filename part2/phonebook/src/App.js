@@ -56,27 +56,39 @@ const App = () => {
       name: newName,
       number: newNumber
     }
-    if (persons.some(({ name }) => name === newName)) {
-      alert(`${newName} is already added to phonebook`)
-      setNewName('')
-      setNewNumber('')
-      return
+    if (persons.find(({ name }) => name.toLowerCase() === newName.toLowerCase())) {
+      if (newNumber === '') {
+        alert(`${newName} is already added to phonebook`)
+        return
+      }
+      const personToFind = persons.find(person => person.name.toLowerCase() === newName.toLowerCase())
+      const id = personToFind.id
+      const confirmNumber = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)
+      if (confirmNumber) {
+        personService
+          .update(id, nameObject)
+          .then(returnPerson => {
+            setPersons(persons.map(person => person.id !== id ? person : returnPerson))
+            setNewName('')
+            setNewNumber('')
+          })
+      }
+    } else {
+      personService
+        .create(nameObject)
+        .then(returnPerson => {
+          setPersons(persons.concat(returnPerson))
+          setNewName('')
+          setNewNumber('')
+        })
     }
-
-    personService
-      .create(nameObject)
-      .then(returnPerson => {
-        setPersons(persons.concat(returnPerson))
-        setNewName('')
-        setNewNumber('')
-      })
   }
   const removePerson = id => {
     const person = persons.find(n => n.id === id)
     const confirmation = window.confirm(`Delete ${person.name}?`)
     if (confirmation) {
       personService
-        .removePerson(id)
+        .remove(id)
         .then(() => {
           setPersons(persons.filter(person => person.id !== id))
         })
