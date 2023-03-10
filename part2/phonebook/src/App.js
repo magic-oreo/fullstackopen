@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import personService from './services/persons'
+import Notification from './components/Notification'
+import './index.css'
 
 const Filter = ({ newFilter, setNewFilter }) => {
 
@@ -40,6 +42,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
+  const [message, setMessage] = useState(null)
   const toShow = persons.filter(person => person.name.toLowerCase().includes(newFilter))
 
   useEffect(() => {
@@ -56,21 +59,24 @@ const App = () => {
       name: newName,
       number: newNumber
     }
+    const personToFind = persons.find(person => person.name.toLowerCase() === newName.toLowerCase())
     if (persons.find(({ name }) => name.toLowerCase() === newName.toLowerCase())) {
       if (newNumber === '') {
-        alert(`${newName} is already added to phonebook`)
-        return
+        return alert(`${newName} is already added to phonebook`)
       }
-      const personToFind = persons.find(person => person.name.toLowerCase() === newName.toLowerCase())
-      const id = personToFind.id
-      const confirmNumber = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)
-      if (confirmNumber) {
+      if (
+        window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)
+      ) {
         personService
-          .update(id, nameObject)
+          .update(personToFind.id, nameObject)
           .then(returnPerson => {
-            setPersons(persons.map(person => person.id !== id ? person : returnPerson))
-            setNewName('')
-            setNewNumber('')
+            setPersons(persons.map(person => person.id !== personToFind.id ? person : returnPerson))
+            setMessage(
+              `Updated ${newName}`
+            )
+            setTimeout(() => {
+              setMessage(null)
+            }, 3000)
           })
       }
     } else {
@@ -78,9 +84,15 @@ const App = () => {
         .create(nameObject)
         .then(returnPerson => {
           setPersons(persons.concat(returnPerson))
-          setNewName('')
-          setNewNumber('')
+          setMessage(
+            `Added ${newName}`
+          )
+          setTimeout(() => {
+            setMessage(null)
+          }, 3000)
         })
+        setNewName('')
+        setNewNumber('')
     }
   }
   const removePerson = id => {
@@ -98,6 +110,7 @@ const App = () => {
   return (
     <>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter newFilter={newFilter} setNewFilter={setNewFilter} />
       <h2>Add a new</h2>
       <Form addPerson={addPerson} newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} />
