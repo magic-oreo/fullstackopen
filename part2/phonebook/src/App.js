@@ -91,9 +91,9 @@ const App = () => {
             setMessage(null)
           }, 3000)
         })
-        setNewName('')
-        setNewNumber('')
     }
+    setNewName('')
+    setNewNumber('')
   }
   const removePerson = id => {
     const person = persons.find(n => n.id === id)
