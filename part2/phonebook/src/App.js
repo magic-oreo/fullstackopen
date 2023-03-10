@@ -43,6 +43,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
   const [message, setMessage] = useState(null)
+  const [messageType, setMessageType] = useState('')
   const toShow = persons.filter(person => person.name.toLowerCase().includes(newFilter))
 
   useEffect(() => {
@@ -52,6 +53,14 @@ const App = () => {
         setPersons(initialPeople)
       })
   }, [])
+
+  const showNotification = (message, type) => {
+    setMessageType(type)
+    setMessage(message)
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
+  }
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -65,52 +74,49 @@ const App = () => {
         return alert(`${newName} is already added to phonebook`)
       }
       if (
-        window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)
+        window.confirm(`${newName} is already added to phonebook. Replace the old number with a new one?`)
       ) {
         personService
           .update(personToFind.id, nameObject)
-          .then(returnPerson => {
-            setPersons(persons.map(person => person.id !== personToFind.id ? person : returnPerson))
-            setMessage(
-              `Updated ${newName}`
-            )
-            setTimeout(() => {
-              setMessage(null)
-            }, 3000)
+          .then(updatedPerson => {
+            setPersons(persons.map(person => person.id !== personToFind.id ? person : updatedPerson))
+            showNotification(`Updated ${newName}`, 'success')
+          })
+          .catch(error => {
+            setPersons(persons.filter(person => person.id !== personToFind.id))
+            showNotification(`Unable to update ${newName}. User no longer exists`, 'error')
           })
       }
     } else {
       personService
         .create(nameObject)
-        .then(returnPerson => {
-          setPersons(persons.concat(returnPerson))
-          setMessage(
-            `Added ${newName}`
-          )
-          setTimeout(() => {
-            setMessage(null)
-          }, 3000)
+        .then(newPerson => {
+          setPersons(persons.concat(newPerson))
+          showNotification(`Added ${newName}`, 'success')
+        })
+        .catch(error => {
+          setPersons(persons.filter(person => person.id !== personToFind.id))
+          showNotification(`Unable to add ${newName}. Unknown error occured`, 'error')
         })
     }
     setNewName('')
     setNewNumber('')
   }
-  const removePerson = id => {
-    const person = persons.find(n => n.id === id)
-    const confirmation = window.confirm(`Delete ${person.name}?`)
-    if (confirmation) {
+  const removePerson = person => {
+    if (window.confirm(`Delete ${person.name}?`)) {
       personService
-        .remove(id)
-        .then(() => {
-          setPersons(persons.filter(person => person.id !== id))
+        .remove(person.id)
+        .catch(error => {
+          console.log('User already deleted')
         })
+      setPersons(persons.filter(n => n.id !== person.id))
     }
   }
 
   return (
     <>
       <h2>Phonebook</h2>
-      <Notification message={message} />
+      <Notification message={message} type={messageType} />
       <Filter newFilter={newFilter} setNewFilter={setNewFilter} />
       <h2>Add a new</h2>
       <Form addPerson={addPerson} newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} />
@@ -119,7 +125,7 @@ const App = () => {
         <Person
           key={person.name}
           person={person}
-          remove={() => removePerson(person.id)} />
+          remove={() => removePerson(person)} />
       )}
     </>
   )
