@@ -2,11 +2,14 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import InfoPanel from './components/InfoPanel'
 import Filter from './components/Filter'
+import View from './components/View'
 
 const App = () => {
   const [data, setData] = useState([])
   const [filter, setFilter] = useState('')
+  const [view, setView] = useState('')
   const toShow = data.filter(data => data.name.common.toLowerCase().includes(filter.toLowerCase()))
+  const viewCountry = toShow.filter(data => data.name.common === view)
 
   useEffect(() => {
     axios
@@ -16,10 +19,16 @@ const App = () => {
       })
   }, [])
 
+  useEffect(() => {
+    setView(filter)
+  }, [filter])
+
   return (
     <>
       <Filter filter={filter} setFilter={setFilter} />
-      <InfoPanel toShow={toShow} />
+      <br />
+      <InfoPanel toShow={toShow} setView={setView} />
+      <View viewCountry={viewCountry} />
     </>
   )
 }

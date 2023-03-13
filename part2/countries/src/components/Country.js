@@ -1,7 +1,10 @@
-const Country = ({ name }) => {
+const Country = ({ name, setView }) => {
     return (
       <>
-        {name}<br />
+        {name}        
+        <button onClick={() => setView(name)}>
+          show
+        </button><br />
       </>
     )
   }

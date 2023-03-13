@@ -1,5 +1,6 @@
 const Filter = ({ filter, setFilter }) => {
-    return (
+  
+  return (
       <>
         find countries <input value={filter} onChange={(event) => setFilter(event.target.value)} />
       </>
