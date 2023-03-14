@@ -2,8 +2,12 @@ const express = require('express')
 const morgan = require('morgan')
 const app = express()
 
+morgan.token('request', (request) => {
+  return JSON.stringify(request.body)
+})
+
 app.use(express.json())
-app.use(morgan('tiny'))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :request'))
 
 let persons = [
   {
@@ -28,15 +32,15 @@ let persons = [
   }
 ]
 
-app.get('/info', (req, res) => {
+app.get('/info', (request, response) => {
   const max = persons.length > 0
     ? persons.length
     : 0
-  res.send(`Phonebook contains info for ${max} people <br>${new Date()}`)
+  response.send(`Phonebook contains info for ${max} people <br>${new Date()}`)
 })
 
-app.get('/api/persons', (req, res) => {
-  res.json(persons)
+app.get('/api/persons', (request, response) => {
+  response.json(persons)
 })
 
 app.get('/api/persons/:id', (request, response) => {
