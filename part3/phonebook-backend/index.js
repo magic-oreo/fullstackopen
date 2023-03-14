@@ -26,6 +26,14 @@ let persons = [
   }
 ]
 
+app.get('/info', (req, res) => {
+  const max = persons.length > 0
+    ? persons.length
+    : 0
+  res.send(`Phonebook contains info for ${max} people <br>${new Date()}`)
+})
+
+
 app.get('/api/persons', (req, res) => {
   res.json(persons)
 })
