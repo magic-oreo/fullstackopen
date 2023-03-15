@@ -1,0 +1,1 @@
+https://magicoreo-phonebook.fly.dev/
