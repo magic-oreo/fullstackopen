@@ -5,6 +5,7 @@ const cors = require('cors')
 const app = express()
 const Person = require('./models/person')
 
+//Production app deployed on Render
 morgan.token('request', (request) => {
   return JSON.stringify(request.body)
 })
