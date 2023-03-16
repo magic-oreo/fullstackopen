@@ -18,7 +18,7 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :r
 app.get('/info', (request, response) => {
   Person.countDocuments().then((count) => {
     response.send(`Phonebook contains info for ${count} people <br>${new Date()}`)
-  });
+  })
 })
 
 app.get('/api/persons', (request, response, next) => {
@@ -42,7 +42,7 @@ app.get('/api/persons/:id', (request, response, next) => {
 
 app.post('/api/persons', (request, response, next) => {
   const body = request.body
-  
+
   const person = new Person({
     name: body.name,
     number: body.number
@@ -66,7 +66,7 @@ app.put('/api/persons/:id', (request, response, next) => {
 
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndRemove(request.params.id)
-    .then(result => {
+    .then(() => {
       response.status(204).end()
     })
     .catch(error => next(error))
