@@ -15,17 +15,16 @@ app.use(express.static('build'))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :request'))
 
 app.get('/info', (request, response) => {
-  const max = persons.length > 0
-    ? persons.length
-    : 0
-  response.send(`Phonebook contains info for ${max} people <br>${new Date()}`)
+  Person.countDocuments().then((count) => {
+    response.send(`Phonebook contains info for ${count} people <br>${new Date()}`)
+  });
 })
 
 app.get('/api/persons', (request, response) => {
   Person.find({}).then(people => {
     response.json(people)
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 app.get('/api/persons/:id', (request, response) => {
@@ -57,7 +56,7 @@ app.post('/api/persons', (request, response) => {
   person.save().then(person => {
     response.json(person)
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 app.put('/api/persons/:id', (request, response) => {
@@ -98,8 +97,8 @@ app.use(unknownEndpoint)
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
 
-  if(error.name === 'CastError') {
-    return response.status(400).send({ error: 'malformmated id'})
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformmated id' })
   }
 
   next(error)
