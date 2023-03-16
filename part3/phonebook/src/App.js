@@ -83,9 +83,8 @@ const App = () => {
             showNotification(`Updated ${newName}`, 'success')
           })
           .catch(error => {
-            setPersons(persons.filter(person => person.id !== personToFind.id))
             showNotification(`Unable to update ${newName}. User no longer exists`, 'error')
-          })
+        })
       }
     } else {
       personService
@@ -95,8 +94,7 @@ const App = () => {
           showNotification(`Added ${newName}`, 'success')
         })
         .catch(error => {
-          setPersons(persons.filter(person => person.id !== personToFind.id))
-          showNotification(`Unable to add ${newName}. Unknown error occured`, 'error')
+          showNotification(error.response.data.error, 'error')
         })
     }
     setNewName('')
