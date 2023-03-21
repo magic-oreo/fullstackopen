@@ -18,13 +18,11 @@ describe('API Requests', () => {
       .expect(200)
       .expect('Content-Type', /application\/json/)
   })
-
   test('all blogs are returned', async () => {
     const response = await api.get('/api/blogs')
 
     expect(response.body).toHaveLength(helper.initialBlogs.length)
   })
-
   test('a specific author is within the returned blogs', async () => {
     const response = await api.get('/api/blogs')
 
@@ -53,6 +51,15 @@ describe('API Requests', () => {
     expect(contents).toContain(
       'Another day in the life'
     )
+  })
+  test('The default value for likes is zero', async () => {
+    const response = await api
+      .post('/api/blogs')
+      .send(helper.exampleBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    expect(response.body.likes).toEqual(0)
   })
 })
 
