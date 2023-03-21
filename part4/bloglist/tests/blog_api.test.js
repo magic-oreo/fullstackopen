@@ -34,6 +34,11 @@ describe('API Requests', () => {
       'Michael Chan'
     )
   })
+  test('Unique identifier property of blogs is named id', async () => {
+    const response = (await api.get('/api/blogs')).body[0]
+    expect(response._id).toBeUndefined()
+    expect(response.id).toBeDefined()
+  })
 })
 
 afterAll(async () => {
