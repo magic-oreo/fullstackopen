@@ -61,6 +61,34 @@ describe('API Requests', () => {
 
     expect(response.body.likes).toEqual(0)
   })
+  test('If new blog does not has a title, return 400', async () => {
+    const newBlog = {
+      author: 'magic-oreo',
+      url: 'invalid url'
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+  })
+  test('If new blog does not include url, return 400', async () => {
+    const newBlog = {
+      author: 'magic-oreo',
+      title: 'Some title'
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+  })
 })
 
 afterAll(async () => {
