@@ -39,6 +39,29 @@ describe('API Requests', () => {
     expect(response._id).toBeUndefined()
     expect(response.id).toBeDefined()
   })
+
+  test('a blog can be added and verified', async () => {
+    const newBlog = {
+      title: 'Another day in the life',
+      author: 'magic-oreo',
+      url: 'invalid url',
+      likes: 69
+    }
+  
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+  
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+  
+    const contents = blogsAtEnd.map(n => n.title)
+    expect(contents).toContain(
+      'Another day in the life'
+    )
+  })
 })
 
 afterAll(async () => {
