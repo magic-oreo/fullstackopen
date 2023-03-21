@@ -54,8 +54,7 @@ const initialBlogs = [
 const exampleBlog = {
   title: 'Another day in the life',
   author: 'magic-oreo',
-  url: 'invalid url',
-  likes: 69
+  url: 'invalid url'
 }
 
 const nonExistingId = async () => {
