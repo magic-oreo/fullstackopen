@@ -82,7 +82,7 @@ describe('total likes', () => {
 describe('favorite blog', () => {
   test('when list has only one blog, returns blog', () => {
     const result = listHelper.favoriteBlog(listWithOneBlog)
-    const expected =   {
+    const expected = {
       title: 'Go To Statement Considered Harmful',
       author: 'Edsger W. Dijkstra',
       likes: 5
