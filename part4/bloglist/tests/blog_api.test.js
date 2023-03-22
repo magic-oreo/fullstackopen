@@ -96,7 +96,6 @@ describe('deletion of a blog', () => {
   test('succeeds with status code 204 if id is valid', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
-    console.log(blogToDelete)
 
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
@@ -113,7 +112,23 @@ describe('deletion of a blog', () => {
     expect(contents).not.toContain(blogToDelete.title)
   })
 })
+describe('updating a blog', () => {
+  test('succeeds if data is valid', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
 
+    const newBlog = {
+      author: 'new title'
+    }
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(newBlog)
+      .expect(200)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd[0].author).toEqual(newBlog.author)
+  })
+})
 afterAll(async () => {
   await mongoose.connection.close()
 })
