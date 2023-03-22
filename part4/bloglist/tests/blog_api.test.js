@@ -11,7 +11,7 @@ beforeEach(async () => {
   await Blog.insertMany(helper.initialBlogs)
 })
 
-describe('API Requests', () => {
+describe('when there is initially some notes saved', () => {
   test('blogs are returned as json', async () => {
     await api
       .get('/api/blogs')
@@ -37,7 +37,9 @@ describe('API Requests', () => {
     expect(response._id).toBeUndefined()
     expect(response.id).toBeDefined()
   })
-  test('a blog can be added and verified', async () => {
+})
+describe('addition of a new note', () => {
+  test('succeeds with valid data', async () => {
     await api
       .post('/api/blogs')
       .send(helper.exampleBlog)
@@ -52,7 +54,7 @@ describe('API Requests', () => {
       'Another day in the life'
     )
   })
-  test('The default value for likes is zero', async () => {
+  test('has the default value of likes as zero', async () => {
     const response = await api
       .post('/api/blogs')
       .send(helper.exampleBlog)
@@ -61,7 +63,7 @@ describe('API Requests', () => {
 
     expect(response.body.likes).toEqual(0)
   })
-  test('If new blog does not has a title, return 400', async () => {
+  test('fails with status code 400 if title is invalid', async () => {
     const newBlog = {
       author: 'magic-oreo',
       url: 'invalid url'
@@ -75,7 +77,7 @@ describe('API Requests', () => {
     const blogsAtEnd = await helper.blogsInDb()
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
   })
-  test('If new blog does not include url, return 400', async () => {
+  test('fails with status code 400 if url is invalid', async () => {
     const newBlog = {
       author: 'magic-oreo',
       title: 'Some title'
@@ -90,7 +92,6 @@ describe('API Requests', () => {
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
   })
 })
-
 describe('deletion of a blog', () => {
   test('succeeds with status code 204 if id is valid', async () => {
     const blogsAtStart = await helper.blogsInDb()
