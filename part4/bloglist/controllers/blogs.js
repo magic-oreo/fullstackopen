@@ -19,9 +19,9 @@ blogRouter.delete('/:id', async (request, response) => {
 })
 
 blogRouter.put('/:id', async (request, response) => {
-  const { title, author, url } = request.body
+  const { title, author, url, likes } = request.body
 
-  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, { title, author, url }, { new: true, runeValidators: true, context: 'query' })
+  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, { title, author, url, likes }, { new: true, runeValidators: true, context: 'query' })
   response.json(updatedBlog)
 })
 
