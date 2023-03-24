@@ -1,5 +1,6 @@
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const { signToken } = require('../utils/signToken')
 
 const initialBlogs = [
   {
@@ -76,6 +77,10 @@ const usersInDb = async () => {
   return users.map(u => u.toJSON())
 }
 
+const authorizationHeader = (user) => ({
+  Authorization: `Bearer ${signToken(user)}`,
+})
+
 module.exports = {
-  initialBlogs, exampleBlog, nonExistingId, blogsInDb, usersInDb
+  initialBlogs, exampleBlog, nonExistingId, blogsInDb, usersInDb, authorizationHeader
 }
