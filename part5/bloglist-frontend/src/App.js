@@ -68,7 +68,9 @@ const App = () => {
       .create(blogObject)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
-        setNewBlog('')
+        setBlogTitle('')
+        setBlogAuthor('')
+        setBlogUrl('')
       })
 
   }
