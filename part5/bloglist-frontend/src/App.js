@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import './index.css'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [message, setMessage] = useState(null)
+  const [messageType, setMessageType] = useState('')
   const [blogTitle, setBlogTitle] = useState('')
   const [blogAuthor, setBlogAuthor] = useState('')
   const [blogUrl, setBlogUrl] = useState('')
@@ -28,6 +31,14 @@ const App = () => {
     }
   }, [])
 
+  const showNotification = (message, type) => {
+    setMessageType(type)
+    setMessage(message)
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
+  }
+
   const handleLogin = async (event) => {
     event.preventDefault()
 
@@ -42,11 +53,9 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      showNotification(`Login successful`, 'success')
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      showNotification(`Wrong username or password`, 'error')
     }
   }
 
@@ -71,7 +80,11 @@ const App = () => {
         setBlogTitle('')
         setBlogAuthor('')
         setBlogUrl('')
+        showNotification(`a new blog ${blogTitle} by ${blogAuthor} added`, 'success')
       })
+      .catch(error => {
+        showNotification(`Unable to create blog`, 'error')
+    })
 
   }
 
@@ -97,7 +110,7 @@ const App = () => {
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
-      <button type="submit">log in</button>
+      <button type="submit">login</button>
     </form>
   )
 
@@ -134,9 +147,10 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
+      <Notification message={message} type={messageType} />
       {!user && loginForm()}
       {user && <div>
-        <p>{user.name} logged in <button onClick={handleLogout}>Log out</button></p>
+        <p>{user.name} logged in <button onClick={handleLogout}>Logout</button></p>
         <h2>create new</h2>
         {blogForm()}
         {blogs.map(blog =>
