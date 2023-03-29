@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
+import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import './index.css'
@@ -40,13 +41,9 @@ const App = () => {
     }, 5000)
   }
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
-
+  const handleLogin = async (userObject) => {
     try {
-      const user = await loginService.login({
-        username, password,
-      })
+      const user = await loginService.login(userObject)
       window.localStorage.setItem(
         'loggedBloglistUser', JSON.stringify(user)
       )
@@ -109,7 +106,8 @@ const App = () => {
     <div>
       <h2>blogs</h2>
       <Notification message={message} type={messageType} />
-      {!user && loginForm()}
+      {!user &&           <LoginForm createUser={handleLogin}
+          />}
       {user && <div>
         <p>{user.name} logged in <button onClick={handleLogout}>Logout</button></p>
         <BlogForm createBlog={addBlog}/>
