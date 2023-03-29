@@ -16,6 +16,8 @@ const App = () => {
   const [messageType, setMessageType] = useState('')
   const [user, setUser] = useState(null)
 
+  const blogFormRef = useRef()
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs)
@@ -62,6 +64,7 @@ const App = () => {
   }
 
   const addBlog = (blogObject) => {
+    blogFormRef.current.toggleVisibility()
     blogService
       .create(blogObject)
       .then(returnedBlog => {
@@ -74,32 +77,6 @@ const App = () => {
 
   }
 
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        username
-        <input
-          type="text"
-          value={username}
-          name="Username"
-          autoComplete="username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
-      </div>
-      <div>
-        password
-        <input
-          type="password"
-          value={password}
-          name="Password"
-          autoComplete="current-password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type="submit">login</button>
-    </form>
-  )
-
   return (
     <div>
       <h2>blogs</h2>
@@ -110,7 +87,7 @@ const App = () => {
           </Togglable>}
       {user && <div>
         <p>{user.name} logged in <button onClick={handleLogout}>Logout</button></p>
-        <Togglable buttonLabel="new blog">
+        <Togglable buttonLabel="new blog" ref={blogFormRef}>
         <BlogForm createBlog={addBlog}/>
         </Togglable>
         {blogs.map(blog =>
