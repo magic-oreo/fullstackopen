@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
@@ -13,10 +13,9 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState(null)
   const [messageType, setMessageType] = useState('')
-  const [blogTitle, setBlogTitle] = useState('')
-  const [blogAuthor, setBlogAuthor] = useState('')
-  const [blogUrl, setBlogUrl] = useState('')
   const [user, setUser] = useState(null)
+
+  const blogRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -72,10 +71,7 @@ const App = () => {
       .create(blogObject)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
-        setBlogTitle('')
-        setBlogAuthor('')
-        setBlogUrl('')
-        showNotification(`a new blog ${blogTitle} by ${blogAuthor} added`, 'success')
+        showNotification(`a new blog ${blogObject.title} has been added by ${blogObject.author}`, 'success')
       })
       .catch(error => {
         showNotification(`Unable to create blog`, 'error')
@@ -116,7 +112,7 @@ const App = () => {
       {!user && loginForm()}
       {user && <div>
         <p>{user.name} logged in <button onClick={handleLogout}>Logout</button></p>
-        <BlogForm createBlog={addBlog} />
+        <BlogForm createBlog={addBlog}/>
         {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />
         )}
