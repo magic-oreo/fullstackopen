@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import blogService from '../services/blogs'
 
-const Blog = ({ blog, onLike, onDelete }) => {
+const Blog = ({ blog, user, onLike, onDelete }) => {
   const [expanded, setExpanded] = useState(false)
   const blogStyle = {
     paddingTop: 10,
@@ -25,8 +24,12 @@ const Blog = ({ blog, onLike, onDelete }) => {
           <a href={blog.url}>{blog.url}</a> <br />
           {blog.likes} <button onClick={() => onLike(blog)}>Likes</button> <br />
           {blog.user.name} <br />
-          <button onClick={() => onDelete(blog)}>remove</button>
-        </>
+          
+          {blog.user.name === user.name && 
+          <button onClick={() => onDelete(blog)}>remove</button> 
+          }
+
+         </>
       }
     </div>
   )
