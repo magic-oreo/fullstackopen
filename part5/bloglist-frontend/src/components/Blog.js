@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, increaseLikes }) => {
+const Blog = ({ blog, onLike, onDelete }) => {
   const [expanded, setExpanded] = useState(false)
   const blogStyle = {
     paddingTop: 10,
@@ -23,8 +23,9 @@ const Blog = ({ blog, increaseLikes }) => {
       {expanded &&
         <>
           <a href={blog.url}>{blog.url}</a> <br />
-          {blog.likes} <button onClick={() => increaseLikes(blog)}>Likes</button> <br />
-          {blog.user.name}
+          {blog.likes} <button onClick={() => onLike(blog)}>Likes</button> <br />
+          {blog.user.name} <br />
+          <button onClick={() => onDelete(blog)}>remove</button>
         </>
       }
     </div>
