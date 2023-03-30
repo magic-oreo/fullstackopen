@@ -53,6 +53,16 @@ const App = () => {
       .then(() => updateBlogs())
   }
 
+  const removeBlog = (blog) => {
+    blogService
+      .remove(blog.id)
+      .catch(error => {
+        showNotification(error.message, 'error')
+      })
+    setBlogs(blogs.filter(n => n.id !== blog.id))
+ 
+  }
+
   const handleLogin = async (userObject) => {
     try {
       const user = await loginService.login(userObject)
@@ -105,7 +115,7 @@ const App = () => {
           <BlogForm createBlog={addBlog} />
         </Togglable>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} increaseLikes={increaseLikes} />
+          <Blog key={blog.id} blog={blog} onLike={increaseLikes} onDelete={removeBlog} />
         )}
       </div>
       }
