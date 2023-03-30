@@ -54,13 +54,14 @@ const App = () => {
   }
 
   const removeBlog = (blog) => {
+    if (window.confirm(`Remove ${blog.title} by ${blog.author}?`)) {
     blogService
       .remove(blog.id)
       .catch(error => {
         showNotification(error.message, 'error')
       })
     setBlogs(blogs.filter(n => n.id !== blog.id))
- 
+    }
   }
 
   const handleLogin = async (userObject) => {
