@@ -91,7 +91,6 @@ const App = () => {
         returnedBlog['user'] = {
           name: user.name
         }
-        console.log(returnedBlog)
         setBlogs(blogs.concat(returnedBlog))
         showNotification(`a new blog ${blogObject.title} has been added by ${blogObject.author}`, 'success')
       })
