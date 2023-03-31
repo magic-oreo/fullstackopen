@@ -13,7 +13,6 @@ const App = () => {
   const [message, setMessage] = useState(null)
   const [messageType, setMessageType] = useState('')
   const [user, setUser] = useState(null)
-  const [likes, setLikes] = useState()
 
   const blogFormRef = useRef()
 
@@ -47,7 +46,6 @@ const App = () => {
 
   const increaseLikes = (blog) => {
     blog['likes']++
-    setLikes(blog.likes)
     blogService
       .update(blog.id, blog)
       .then(() => updateBlogs())
@@ -55,12 +53,12 @@ const App = () => {
 
   const removeBlog = (blog) => {
     if (window.confirm(`Remove ${blog.title} by ${blog.author}?`)) {
-    blogService
-      .remove(blog.id)
-      .catch(error => {
-        showNotification(error.message, 'error')
-      })
-    setBlogs(blogs.filter(n => n.id !== blog.id))
+      blogService
+        .remove(blog.id)
+        .catch(error => {
+          showNotification(error.message, 'error')
+        })
+      setBlogs(blogs.filter(n => n.id !== blog.id))
     }
   }
 
@@ -72,9 +70,9 @@ const App = () => {
       )
       blogService.setToken(user.token)
       setUser(user)
-      showNotification(`Login successful`, 'success')
+      showNotification('Login successful', 'success')
     } catch (error) {
-      showNotification(`Wrong username or password`, 'error')
+      showNotification(error.message, 'error')
     }
   }
 
@@ -95,8 +93,8 @@ const App = () => {
         setBlogs(blogs.concat(returnedBlog))
         showNotification(`a new blog ${blogObject.title} has been added by ${blogObject.author}`, 'success')
       })
-      .catch(error => {
-        showNotification(`Unable to create blog`, 'error')
+      .catch(() => {
+        showNotification('Unable to create blog', 'error')
       })
 
   }

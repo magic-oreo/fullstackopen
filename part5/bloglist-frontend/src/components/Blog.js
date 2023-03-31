@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from 'react'
 
 const Blog = ({ blog, user, onLike, onDelete }) => {
   const [expanded, setExpanded] = useState(false)
@@ -24,12 +24,12 @@ const Blog = ({ blog, user, onLike, onDelete }) => {
           <a href={blog.url}>{blog.url}</a> <br />
           {blog.likes} <button onClick={() => onLike(blog)}>Likes</button> <br />
           {blog.user.name} <br />
-          
-          {blog.user.name === user.name && 
-          <button onClick={() => onDelete(blog)}>remove</button> 
+
+          {blog.user.name === user.name &&
+          <button onClick={() => onDelete(blog)}>remove</button>
           }
 
-         </>
+        </>
       }
     </div>
   )
